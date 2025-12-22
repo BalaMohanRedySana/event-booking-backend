@@ -18,10 +18,24 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// CORS configuration
+// ✅ CORS configuration (local + production)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://event-booking-beryl.vercel.app"
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: (origin, callback) => {
+      // allow requests without origin (Postman, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -35,9 +49,9 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/tickets", ticketRoutes);
 
-// Health check route
+// Health check
 app.get("/", (req, res) => {
-  res.send("🚀 API is running successfully");
+  res.status(200).send("🚀 API is running successfully");
 });
 
 // Server
