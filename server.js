@@ -9,33 +9,39 @@ import eventRoutes from "./routes/eventRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import ticketRoutes from "./routes/ticketRoutes.js";
-// import testApiRoutes from "./routes/test-api.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// CORS configuration
-app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-}));
-
+// Middleware
 app.use(express.json());
 
+// CORS configuration
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/tickets", ticketRoutes);
-// app.use("/test-api", testApiRoutes);
 
+// Health check route
+app.get("/", (req, res) => {
+  res.send("🚀 API is running successfully");
+});
 
-
-
-
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+// Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
