@@ -18,7 +18,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-// ✅ CORS configuration (local + production)
+
 const allowedOrigins = [
   "http://localhost:3000",
   "https://event-booking-frontend-pi.vercel.app"
