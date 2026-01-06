@@ -21,7 +21,7 @@ app.use(express.json());
 // ✅ CORS configuration (local + production)
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://event-booking-beryl.vercel.app"
+  "https://event-booking-frontend-pi.vercel.app"
 ];
 
 app.use(
