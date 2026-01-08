@@ -18,8 +18,11 @@ const app = express();
 // CORS Configuration - Must be before other middleware
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://event-booking-frontend-pi.vercel.app"
-];
+  "https://event-booking-frontend-pi.vercel.app",
+  process.env.FRONTEND_URL // Allow dynamic frontend URL from environment
+].filter(Boolean); // Remove undefined values
+
+console.log('🔒 Allowed CORS origins:', allowedOrigins);
 
 app.use(
   cors({
@@ -28,9 +31,10 @@ app.use(
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.indexOf(origin) !== -1) {
+        console.log('✅ Allowed origin:', origin);
         callback(null, true);
       } else {
-        console.log('Blocked origin:', origin);
+        console.log('❌ Blocked origin:', origin);
         callback(new Error('Not allowed by CORS'));
       }
     },
